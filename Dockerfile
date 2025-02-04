@@ -33,6 +33,7 @@ WORKDIR /YuE
 RUN git clone https://huggingface.co/m-a-p/xcodec_mini_infer /YuEGP/inference/xcodec_mini_infer
 RUN python3.11 -m pip install --no-cache-dir -r requirements.txt
 
+WORKDIR /
 # Add src files (Worker Template)
 ADD src .
 
