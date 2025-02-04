@@ -19,6 +19,7 @@ COPY builder/requirements.txt /requirements.txt
 RUN python3.11 -m pip install --upgrade pip && \
     python3.11 -m pip install --upgrade -r /requirements.txt --no-cache-dir && \
     rm /requirements.txt
+
 RUN python3.11 -m pip install --upgrade --no-cache-dir torch==2.5.1 torchvision torchaudio --index-url https://download.pytorch.org/whl/test/cu124
 
 # NOTE: The base image comes with multiple Python versions pre-installed.
