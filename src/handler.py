@@ -46,8 +46,14 @@ def handler(job):
     clean_output_dir()
 
     # Extract common parameters
-    genre_txt = job_input.get("genre_txt", "prompt_examples/genre.txt")
-    lyrics_txt = job_input.get("lyrics_txt", "prompt_examples/lyrics.txt")
+    genre_txt = job_input.get("genre_txt", "a rock song")
+    # write the genre_txt to a file
+    with open("genre.txt", "w") as f:
+        f.write(genre_txt)
+    lyrics_txt = job_input.get("lyrics_txt", "some lyrics")
+    # write the lyrics_txt to a file
+    with open("lyrics.txt", "w") as f:
+        f.write(lyrics_txt)
     run_n_segments = job_input.get("run_n_segments", 2)
     stage2_batch_size = job_input.get("stage2_batch_size", 4)
     max_new_tokens = job_input.get("max_new_tokens", 3000)
@@ -73,8 +79,8 @@ def handler(job):
         f"cd {YU_E_DIR} && python infer.py "
         f"--stage1_model {stage1_model} "
         f"--stage2_model {stage2_model} "
-        f"--genre_txt {genre_txt} "
-        f"--lyrics_txt {lyrics_txt} "
+        f"--genre_txt genre.txt "
+        f"--lyrics_txt lyrics.txt "
         f"--run_n_segments {run_n_segments} "
         f"--stage2_batch_size {stage2_batch_size} "
         f"--output_dir {OUTPUT_DIR} "
@@ -99,8 +105,6 @@ def handler(job):
     # Return response
     return {
         "status": "completed",
-        "stdout": stdout,
-        "stderr": stderr,
         "generated_files": encoded_files,
     }
 
