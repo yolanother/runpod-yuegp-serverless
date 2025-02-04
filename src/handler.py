@@ -4,7 +4,7 @@ import os
 import base64
 
 # Define paths
-YU_E_DIR = "/YuE/inference/"
+YU_E_DIR = "YuE/inference/"
 OUTPUT_DIR = "./output"
 
 
@@ -33,10 +33,21 @@ def encode_files():
 
 
 def run_command(command):
-    """ Run a shell command and capture output. """
-    process = subprocess.run(command, shell=True, capture_output=True, text=True)
-    return process.stdout, process.stderr
+    """ Run a shell command and capture output. Wait for the process to finish before moving on. Log each line of output and stderror """
+    process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+    error = ""
+    for line in process.stdout:
+        log(line)
+    for line in process.stderr:
+        log(line)
+        error += line + "\n"
+    process.wait()
+    # return true if successful false if error
+    return process.returncode == 0, error
 
+def log(message):
+    """ Log a message to the console. """
+    print(f'[runpod-yuegp-worker] {message}')
 
 def handler(job):
     """ Handler function that processes jobs. """
@@ -97,7 +108,14 @@ def handler(job):
         )
 
     # Run command
-    stdout, stderr = run_command(command)
+    status, error = run_command(command)
+    if not status:
+        return {
+            "status": "error",
+            "error": "Failed to generate music",
+            "message": error
+        }
+
 
     # Encode generated files
     encoded_files = encode_files()

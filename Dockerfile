@@ -30,7 +30,7 @@ RUN git clone https://github.com/deepbeepmeep/YuEGP/ /YuE
 
 # switch to YuEGP directory
 WORKDIR /YuE
-RUN git clone https://huggingface.co/m-a-p/xcodec_mini_infer /YuEGP/inference/xcodec_mini_infer
+RUN git clone https://huggingface.co/m-a-p/xcodec_mini_infer /YuE/inference/xcodec_mini_infer
 RUN python3.11 -m pip install --no-cache-dir -r requirements.txt
 
 WORKDIR /
