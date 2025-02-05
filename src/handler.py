@@ -87,7 +87,7 @@ def handler(job):
 
     # Construct base command
     command = (
-        f"cd {YU_E_DIR} && python3.11 -u infer.py "
+        f"cd {YU_E_DIR} && python -u infer.py "
         f"--stage1_model {stage1_model} "
         f"--stage2_model {stage2_model} "
         f"--genre_txt genre.txt "

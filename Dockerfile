@@ -26,7 +26,7 @@ RUN python3.11 -m pip install --upgrade --no-cache-dir torch==2.5.1 torchvision 
 #       It is reccommended to specify the version of Python when running your code.
 
 RUN git lfs install
-RUN git clone https://github.com/deepbeepmeep/YuEGP/ /YuE
+RUN git clone https://github.com/yolanother/YuEGP/ /YuE
 
 # switch to YuEGP directory
 WORKDIR /YuE
@@ -36,5 +36,8 @@ RUN python3.11 -m pip install --no-cache-dir -r requirements.txt
 WORKDIR /
 # Add src files (Worker Template)
 ADD src .
+
+# Symlink /usr/bin/python to python3.11 (use which to find it)
+RUN ln -s /usr/bin/python3.11 /usr/bin/python
 
 CMD python3.11 -u /handler.py
