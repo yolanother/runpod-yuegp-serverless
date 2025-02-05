@@ -26,10 +26,12 @@ RUN python3.11 -m pip install --upgrade --no-cache-dir torch==2.5.1 torchvision 
 #       It is reccommended to specify the version of Python when running your code.
 
 RUN git lfs install
+ADD "https://api.github.com/repos/yolanother/YuEGP/commits?per_page=1" latest_commit
 RUN git clone https://github.com/yolanother/YuEGP/ /YuE
 
 # switch to YuEGP directory
 WORKDIR /YuE
+ADD "https://huggingface.co/m-a-p/xcodec_mini_infer/commits?per_page=1" latest_commit
 RUN git clone https://huggingface.co/m-a-p/xcodec_mini_infer /YuE/inference/xcodec_mini_infer
 RUN python3.11 -m pip install --no-cache-dir -r requirements.txt
 
