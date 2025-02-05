@@ -101,12 +101,14 @@ def handler(job):
 
     # Add audio-specific parameters if provided
     if audio_prompt_path:
+        log(f"Using audio prompt: {audio_prompt_path}")
         command += (
             f"--audio_prompt_path {audio_prompt_path} "
             f"--prompt_start_time {prompt_start_time} "
             f"--prompt_end_time {prompt_end_time} "
         )
 
+    log(f"Running command: {command}")
     # Run command
     status, error = run_command(command)
     if not status:
@@ -116,7 +118,7 @@ def handler(job):
             "message": error
         }
 
-
+    log("Encoding generated files...")
     # Encode generated files
     encoded_files = encode_files()
 
