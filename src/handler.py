@@ -6,7 +6,7 @@ from runpod.serverless.utils import rp_upload
 
 # Define paths
 YU_E_DIR = "YuE/inference/"
-OUTPUT_DIR = "./output"
+OUTPUT_DIR = "/output"
 
 
 def clean_output_dir():
@@ -66,11 +66,11 @@ def handler(job):
     # Extract common parameters
     genre_txt = job_input.get("genre_txt", "a rock song")
     # write the genre_txt to a file
-    with open("genre.txt", "w") as f:
+    with open("/genre.txt", "w") as f:
         f.write(genre_txt)
     lyrics_txt = job_input.get("lyrics_txt", "some lyrics")
     # write the lyrics_txt to a file
-    with open("lyrics.txt", "w") as f:
+    with open("/lyrics.txt", "w") as f:
         f.write(lyrics_txt)
     run_n_segments = job_input.get("run_n_segments", 2)
     stage2_batch_size = job_input.get("stage2_batch_size", 4)
@@ -94,11 +94,11 @@ def handler(job):
 
     # Construct base command
     command = (
-        f"cd {YU_E_DIR} && python -u infer.py "
+        f"python -u {YU_E_DIR}/infer.py "
         f"--stage1_model {stage1_model} "
         f"--stage2_model {stage2_model} "
-        f"--genre_txt genre.txt "
-        f"--lyrics_txt lyrics.txt "
+        f"--genre_txt /genre.txt "
+        f"--lyrics_txt /lyrics.txt "
         f"--run_n_segments {run_n_segments} "
         f"--stage2_batch_size {stage2_batch_size} "
         f"--output_dir {OUTPUT_DIR} "
