@@ -2,6 +2,7 @@ import runpod
 import subprocess
 import os
 import base64
+from runpod.serverless.utils import rp_upload
 
 # Define paths
 YU_E_DIR = "YuE/inference/"
@@ -19,16 +20,22 @@ def clean_output_dir():
         os.makedirs(OUTPUT_DIR)
 
 
-def encode_files():
+def encode_files(guid):
     """ Encodes all generated files in the output directory as Base64. """
     encoded_files = []
     if os.path.exists(OUTPUT_DIR):
         for file in os.listdir(OUTPUT_DIR):
             file_path = os.path.join(OUTPUT_DIR, file)
             if os.path.isfile(file_path):
-                with open(file_path, "rb") as f:
-                    encoded_content = base64.b64encode(f.read()).decode("utf-8")
-                    encoded_files.append({"filename": file, "content": encoded_content})
+                if os.environ.get("BUCKET_ENDPOINT_URL"):
+                    log(f"Uploading mp3 to bucket...")
+                    url = rp_upload.upload_file_to_bucket(f"{guid}.mp3", file_path)
+                    log(f"Uploaded mp3 to {url}")
+                    encode_files.append({"filename": file, "url": url})
+                else:
+                    with open(file_path, "rb") as f:
+                        encoded_content = base64.b64encode(f.read()).decode("utf-8")
+                        encoded_files.append({"filename": file, "content": encoded_content})
     return encoded_files
 
 
@@ -117,10 +124,16 @@ def handler(job):
             "error": "Failed to generate music",
             "message": error
         }
+     # if there is a job_input['id'] then use that for the guid, otherwise generate one
+    if 'id' in job_input:
+        guid = job_input['id']
+    else:
+        import uuid
+        guid = str(uuid.uuid4())
 
     log("Encoding generated files...")
     # Encode generated files
-    encoded_files = encode_files()
+    encoded_files = encode_files(guid)
 
     # Return response
     return {
