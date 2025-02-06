@@ -31,7 +31,6 @@ RUN git clone https://github.com/yolanother/YuEGP/ /YuE
 
 # switch to YuEGP directory
 WORKDIR /YuE
-ADD "https://huggingface.co/m-a-p/xcodec_mini_infer/commits?per_page=1" latest_commit
 RUN git clone https://huggingface.co/m-a-p/xcodec_mini_infer /YuE/inference/xcodec_mini_infer
 RUN python3.11 -m pip install --no-cache-dir -r requirements.txt
 
